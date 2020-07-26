@@ -134,43 +134,60 @@ public class TicTacToe {
         field[xVal][yVal] = sign;
     }
 
+    // Проверка на диапазон значений, чтобы не выйти за пределы массива
+    static boolean checkOutOfArray(int xVal, int yVal) {
+        if (xVal < 0 || xVal > 2 || yVal < 0 || yVal > 2) {
+            return false;
+        }
+        return true;
+    }
+
     static void doPlayerMove(char[][] field, char sign) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Sir, you move...");
+        int xVal = 0;
+        int yVal = 0;
 
-        // Вводим координаты Х, Y
-        System.out.println("Please enter X-value [1-3]");
-        int xVal = scanner.nextInt() - 1;
-        System.out.println("Please enter Y-value [1-3]");
-        int yVal = scanner.nextInt() - 1;
-
-        // Проверка на диапазон значений, чтобы не выйти за пределы массива
-        while (true) {
-            if (xVal < 0 || xVal > 2) {
-                System.out.println("Please, enter the normal coordinate of 'x', don`t extent beyond the length of field");
-                xVal = scanner.nextInt() - 1;
-            } else {
-                break;
-            }
-        }
-        while (true) {
-            if (yVal < 0 || yVal > 2) {
-                System.out.println("Please, enter the normal coordinate of 'у', don`t extent beyond the length of field");
-                yVal = scanner.nextInt() - 1;
-            } else {
-                break;
-            }
-        }
-
-        // Если значение по координатам занято, то повторяем ввод координат, пока не найдем свободные
-        while (field[xVal][yVal] != '-') {
-            System.out.println(String.format("Field[%s][%s] is already occupied", xVal + 1, yVal + 1));
+        int cnt = 0;
+        while (cnt != 2) {
+            int check = 0;
+            cnt = 0;
+            // Вводим координаты Х, Y
             System.out.println("Please enter X-value [1-3]");
             xVal = scanner.nextInt() - 1;
-
             System.out.println("Please enter Y-value [1-3]");
             yVal = scanner.nextInt() - 1;
+
+            if(checkOutOfArray(xVal, yVal)) {
+                cnt++;
+            }
+            else {
+                System.out.println(String.format("Field[%s][%s] is out of array", xVal + 1, yVal + 1));
+                continue;
+            }
+
+            // Если значение по координатам занято, то повторяем ввод координат, пока не найдем свободные
+            while (field[xVal][yVal] != '-') {
+                System.out.println(String.format("Field[%s][%s] is already occupied", xVal + 1, yVal + 1));
+                System.out.println("Please enter X-value [1-3]");
+                xVal = scanner.nextInt() - 1;
+
+                System.out.println("Please enter Y-value [1-3]");
+                yVal = scanner.nextInt() - 1;
+
+                if(!checkOutOfArray(xVal, yVal)) {
+                    System.out.println(String.format("Field[%s][%s] is out of array", xVal + 1, yVal + 1));
+                    check++;
+                    break;
+                }
+                else {
+                    cnt++;
+                }
+            }
+            if(check != 1) {
+                cnt++;
+            }
         }
 
         field[xVal][yVal] = sign;
